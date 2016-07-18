@@ -1,0 +1,39 @@
+#
+# Sprite sheet data for Unity.
+#
+# To import these sprites into your Unity project, download "TexturePackerImporter":
+# http://www.codeandweb.com/texturepacker/unity
+#
+# Sprite sheet: UIAtlas.png (512 x 512)
+# $TexturePacker:SmartUpdate:c637aa08c9d3b3f9e2472c84db7f942c:bce5343e0ece47ea6eadb0ea640f3f04:5ce845f15123443064cd137dae0a2e89$
+#
+
+back;250;256;48;48;0.5;0.5
+bg_slant;67;244;60;60;0.5;0.5
+button_bg;226;72;74;74;0.5;0.5
+button_disabled;2;410;200;100;0.5;0.5
+button_highlighted;205;410;200;100;0.5;0.5
+button_normal;2;307;200;100;0.5;0.5
+button_pressed;205;307;200;100;0.5;0.5
+cell_bg;2;242;62;62;0.5;0.5
+checkmark;303;88;34;34;0.5;0.5
+group_bg;193;250;54;54;0.5;0.5
+loading;277;29;40;40;0.5;0.5
+navbar_bg;21;22;20;92;0.5;0.5
+next;226;21;48;48;0.5;0.5
+page;135;2;22;22;0.5;0.5
+page_on;160;2;22;22;0.5;0.5
+slider_bar;125;118;52;28;0.5;0.5
+small_face;130;244;60;60;0.5;0.5
+tabbar_bg;2;2;16;112;0.5;0.5
+tabbar_icon1;408;422;88;88;0.5;0.5
+tabbar_icon1_on;408;331;88;88;0.5;0.5
+tabbar_icon2;408;240;88;88;0.5;0.5
+tabbar_icon2_on;44;26;88;88;0.5;0.5
+tabbar_icon3;125;149;88;88;0.5;0.5
+tabbar_icon3_on;135;27;88;88;0.5;0.5
+tabbar_icon4;216;149;88;88;0.5;0.5
+tabbar_icon4_on;307;216;88;88;0.5;0.5
+tabbar_icon5;398;149;88;88;0.5;0.5
+tabbar_icon5_on;307;125;88;88;0.5;0.5
+window_bg;2;117;120;120;0.5;0.5

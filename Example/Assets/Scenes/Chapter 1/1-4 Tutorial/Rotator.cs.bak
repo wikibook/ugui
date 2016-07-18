@@ -1,0 +1,23 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class Rotator : MonoBehaviour
+{
+	[SerializeField] private float rotationSpeed;	// 回転速度を設定するフィールド
+
+	// Use this for initialization
+	void Start()
+	{
+//		rotationSpeed = 10.0f;		// 回転速度を初期化
+		Application.targetFrameRate = 60;	// フレームレートを60fpsに設定
+	}
+	
+	// Update is called once per frame
+	void Update()
+	{
+		// 回転させる角度を算出する
+		float yAngle = rotationSpeed * Time.deltaTime;
+		// ゲームオブジェクトをY軸について回転させる
+		transform.Rotate(0.0f, yAngle, 0.0f);
+	}
+}

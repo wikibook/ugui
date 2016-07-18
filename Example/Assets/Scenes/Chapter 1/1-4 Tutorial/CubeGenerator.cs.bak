@@ -1,0 +1,20 @@
+﻿using UnityEngine;
+
+public class CubeGenerator : MonoBehaviour
+{
+	[SerializeField] private GameObject cubePrefab;	// 立方体のプレハブ
+	
+	public void Generate()
+	{
+		// 立方体のプレハブをインスタンス化
+		GameObject obj = Instantiate(cubePrefab) as GameObject;
+		// インスタンスを「CubeGenerator」オブジェクトの子要素にする
+		obj.transform.SetParent(transform);
+		// インスタンスのスケールをプレハブに合わせる
+		obj.transform.localScale = cubePrefab.transform.localScale;
+		// インスタンスの位置を「CubeGenerator」オブジェクトに合わせる
+		obj.transform.position = transform.position;
+		// 落下のたびに変化するように、ランダムな回転角度にする
+		obj.transform.rotation = Random.rotation;
+	}
+}

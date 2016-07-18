@@ -1,0 +1,143 @@
+fileFormatVersion: 2
+guid: 30d7ad73d806d41848bc9c34c9df579d
+timeCreated: 1440312422
+licenseType: Pro
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: walking_robot1
+    21300002: walking_robot2
+    21300004: walking_robot3
+    21300006: walking_robot4
+    21300008: walking_robot5
+    21300010: walking_robot6
+    21300012: walking_robot7
+    21300014: walking_robot8
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: .25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 8
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -3
+  maxTextureSize: 4096
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: .5, y: .5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: walking_robot1
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 4
+        width: 80
+        height: 164
+      alignment: 9
+      pivot: {x: .524999976, y: .524390221}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: walking_robot2
+      rect:
+        serializedVersion: 2
+        x: 214
+        y: 174
+        width: 96
+        height: 168
+      alignment: 9
+      pivot: {x: .520833313, y: .511904776}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: walking_robot3
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 170
+        width: 104
+        height: 172
+      alignment: 9
+      pivot: {x: .519230783, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: walking_robot4
+      rect:
+        serializedVersion: 2
+        x: 214
+        y: 4
+        width: 96
+        height: 168
+      alignment: 9
+      pivot: {x: .520833313, y: .511904776}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: walking_robot5
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 4
+        width: 80
+        height: 164
+      alignment: 9
+      pivot: {x: .524999976, y: .524390221}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: walking_robot6
+      rect:
+        serializedVersion: 2
+        x: 312
+        y: 174
+        width: 88
+        height: 168
+      alignment: 9
+      pivot: {x: .522727251, y: .511904776}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: walking_robot7
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 170
+        width: 104
+        height: 172
+      alignment: 9
+      pivot: {x: .519230783, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: walking_robot8
+      rect:
+        serializedVersion: 2
+        x: 312
+        y: 4
+        width: 88
+        height: 168
+      alignment: 9
+      pivot: {x: .522727251, y: .511904776}
+      border: {x: 0, y: 0, z: 0, w: 0}
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

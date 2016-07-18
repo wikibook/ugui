@@ -1,0 +1,67 @@
+﻿using UnityEngine;
+using System.Runtime.InteropServices;
+
+public class LocationPluginInterface
+{
+#if UNITY_IOS
+	// ネイティブプラグインのインターフェイスにアクセスするための宣言
+	[DllImport ("__Internal")]
+	private static extern bool _startUpdatingLocation(string callbackTarget);
+
+	[DllImport ("__Internal")]
+	private static extern void _stopUpdatingLocation();
+#endif
+	
+#if UNITY_ANDROID
+	// Java側のLocationPluginクラスのインスタンスを取得するプロパティ
+	private static AndroidJavaObject locationPluginInstance;
+	public static AndroidJavaObject LocationPluginInstance {
+		get {
+			if(locationPluginInstance == null)
+			{
+				// パッケージ名からJavaのLocationPluginクラスを取得して、メソッドを呼ぶ
+				AndroidJavaClass locationPluginClass = 
+					new AndroidJavaClass("com.example.locationplugin.LocationPlugin");
+				locationPluginInstance = 
+					locationPluginClass.CallStatic<AndroidJavaObject>("getInstance");
+			}
+			return locationPluginInstance;
+		}
+	}
+
+	// Java側のメソッドを呼び出すのインターフェイスメソッド
+	private static bool _startUpdatingLocation(string callbackTarget)
+	{
+		// LocationPluginクラスのインスタンスのstartUpdatingLocationメソッドを呼ぶ
+		return LocationPluginInstance.Call<bool>("startUpdatingLocation", 
+			callbackTarget);
+	}
+
+	private static void _stopUpdatingLocation()
+	{
+		// LocationPluginクラスのインスタンスのstopUpdatingLocationメソッドを呼ぶ
+		LocationPluginInstance.Call("stopUpdatingLocation");
+	}
+#endif
+	
+	// Unity側からネイティブプラグインのインターフェイスを呼ぶメソッドの定義
+	// デバイス上で実行したときのみ呼ぶようにする
+
+	// 位置情報の取得を開始するメソッド
+	public static bool StartUpdatingLocation(string callbackTarget)
+	{
+#if !UNITY_EDITOR
+		return _startUpdatingLocation(callbackTarget);
+#else
+		return false;
+#endif
+	}
+	
+	// 位置情報の取得を停止するメソッド
+	public static void StopUpdatingLocation()
+	{
+#if !UNITY_EDITOR
+		_stopUpdatingLocation();
+#endif
+	}
+}

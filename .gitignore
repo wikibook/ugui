@@ -1,0 +1,39 @@
+# ---------------[ Unity generated ]------------------ #
+Example/[Ll]ibrary/
+Example/[Tt]emp/
+Example/[Oo]bj/
+Example/UnityGenerated/
+#Example/ProjectSettings/*.asset
+Example/Assets/codeandweb.com
+Example/Assets/codeandweb.com.meta
+Example/Assets/Plugins/Pixelplacement
+Example/Assets/Plugins/Pixelplacement.meta
+  
+# ----[ Visual Studio / MonoDevelop generated ]------- #
+  
+ExportedObj/
+*.svd
+*.userprefs
+*.csproj
+*.pidb
+*.suo
+*.sln
+*.user
+*.unityproj
+*.booproj
+  
+# -------------[ OS generated ]------------------------ #
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+ 
+# -------------[ Build ]------------------------ #
+*.html
+*.unity3d
+*.apk
+Example/build

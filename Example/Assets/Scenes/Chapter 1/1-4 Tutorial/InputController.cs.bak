@@ -1,0 +1,30 @@
+﻿using UnityEngine;
+
+public class InputController : MonoBehaviour
+{
+	void Update()
+	{
+		if(!Application.isMobilePlatform)
+		{
+			// モバイルプラットフォーム以外の処理
+			if(Input.GetMouseButtonUp(0))
+			{
+				// マウスの左ボタンが押して放された状態なら、CubeGeneratorコンポーネントのGenerateメソッドを呼ぶ
+				GetComponent<CubeGenerator>().Generate();
+			}
+		}
+		else
+		{
+			// モバイルプラットフォームの処理
+			if(Input.touchCount >= 1)
+			{
+				Touch touch = Input.GetTouch(0);
+				if(touch.phase == TouchPhase.Began)
+				{
+					// タッチが開始されたら、CubeGeneratorコンポーネントのGenerateメソッドを呼ぶ
+					GetComponent<CubeGenerator>().Generate();
+				}
+			}
+		}
+	}
+}

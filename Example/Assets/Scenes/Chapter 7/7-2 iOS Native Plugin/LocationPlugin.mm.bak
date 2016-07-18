@@ -1,0 +1,157 @@
+#import <Foundation/Foundation.h>
+#import <CoreLocation/CoreLocation.h>
+
+// LocationPluginクラスの定義
+@interface LocationPlugin : NSObject<CLLocationManagerDelegate>
+// CLLocationManagerDelegateプロトコルを採用する
+{
+	CLLocationManager *locationManager;	// CLLocationManagerのインスタンスを保持
+	NSString *callbackTarget;			// コールバックの送信先を保持
+	bool isReverseGeocoding;			// 逆ジオコーディングの処理中かどうかを保持
+}
+
++ (LocationPlugin *)sharedInstance;		// シングルトンのインスタンスを返す
+
+@end
+
+// LocationPluginクラスの実装
+@implementation LocationPlugin
+
+// シングルトンインスタンスの初期化と取得
+static LocationPlugin *sharedInstance = nil;
++ (id)sharedInstance
+{
+	@synchronized(self)
+	{
+		if(sharedInstance == nil)
+		{
+			sharedInstance = [[self alloc] init];
+		}
+	}
+	return sharedInstance;
+}
+
+// 位置情報の取得を開始するメソッド
+- (BOOL)startUpdatingLocation:(NSString *)newCallbackTarget
+{
+	// Unity側にコールバックを送信するときの送信先ゲームオブジェクト名を保持しておく
+	callbackTarget = newCallbackTarget;
+	
+	if(locationManager == nil)
+	{
+		locationManager = [[CLLocationManager alloc] init];
+	}
+
+	// 位置情報サービスが有効かつ許可されているかどうか確認する
+	BOOL isEnabledAndAuthorized = NO;
+	if([CLLocationManager locationServicesEnabled])
+	{
+		CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+		if(status == kCLAuthorizationStatusAuthorizedAlways || 
+		   status == kCLAuthorizationStatusAuthorizedWhenInUse)
+		{
+			isEnabledAndAuthorized = YES;
+		}
+	}
+	if(!isEnabledAndAuthorized)
+	{
+		// 位置情報サービスが無効か許可されていない場合、ユーザーの許可を求める
+		[locationManager requestWhenInUseAuthorization];
+		return NO;
+	}
+	
+	// 位置情報の取得を開始する
+	locationManager.delegate = self;
+	locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+	[locationManager startUpdatingLocation];
+
+	return YES;
+}
+
+// 位置情報の取得を停止するメソッド
+- (void)stopUpdatingLocation
+{
+	if(locationManager != nil)
+	{
+		[locationManager stopUpdatingLocation];
+	}
+}
+
+#pragma mark - CLLocationManagerDelegateプロトコルのメソッドの実装
+
+// 位置情報が更新されたときに呼ばれる
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
+{
+	if(isReverseGeocoding)
+	{
+		return;
+	}
+	
+	// 住所を取得するため、取得した位置情報を元に逆ジオコーディングをおこなう
+	isReverseGeocoding = YES;
+	
+	CLLocation *location = [locations lastObject];
+	CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+	[geocoder reverseGeocodeLocation:location
+				   completionHandler:^(NSArray *placemarks, NSError *error) {
+		isReverseGeocoding = NO;
+
+		// CLPlacemarkオブジェクトのFormattedAddressLinesから住所の文字列を取得する
+		NSString *addressString = @"";
+		if(placemarks.count >= 1)
+		{
+			CLPlacemark *placemark = [placemarks firstObject];
+			NSArray *addressLines = 
+				[placemark addressDictionary][@"FormattedAddressLines"];
+			addressString = [addressLines componentsJoinedByString:@" "];
+		}
+
+		// パラメーターとして渡す文字列を作成する
+		NSString *parameter = [NSString stringWithFormat:@"%f\t%f\t%f\t%f\t%@",
+							   location.coordinate.latitude, 
+							   location.coordinate.longitude,
+							   location.speed, location.horizontalAccuracy,
+							   addressString];
+
+		// UnitySendMessageメソッドを使ってUnity側のOnUpdateLocationメソッドを呼ぶ
+		UnitySendMessage([callbackTarget cStringUsingEncoding:NSUTF8StringEncoding],
+						 "OnUpdateLocation",
+						 [parameter cStringUsingEncoding:NSUTF8StringEncoding]);
+	}];
+}
+
+// そのほかの必須メソッド
+- (void)locationManager:(CLLocationManager *)manager
+	  didDetermineState:(CLRegionState)state forRegion:(CLRegion *)region {}
+
+- (void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)manager {}
+
+- (void)locationManagerDidResumeLocationUpdates:(CLLocationManager *)manager {}
+
+@end
+
+#pragma mark - ネイティブプラグイン側の呼び出しインターフェイスの追加
+
+// C++の名前マングリングを回避するため、Cリンケージで宣言する
+extern "C" {
+	// 位置情報の取得を開始するメソッドを呼ぶインターフェイス
+	BOOL _startUpdatingLocation(const char *callbackTarget)
+	{
+		LocationPlugin *instance = [LocationPlugin sharedInstance];
+		@synchronized(instance)
+		{
+			return [instance startUpdatingLocation:
+				[NSString stringWithUTF8String:callbackTarget]];
+		}
+	}
+
+	// 位置情報の取得を停止するメソッドを呼ぶインターフェイス
+	void _stopUpdatingLocation()
+	{
+		LocationPlugin *instance = [LocationPlugin sharedInstance];
+		@synchronized(instance)
+		{
+			[instance stopUpdatingLocation];
+		}
+	}
+}

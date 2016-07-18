@@ -1,0 +1,19 @@
+#
+# Sprite sheet data for Unity.
+#
+# To import these sprites into your Unity project, download "TexturePackerImporter":
+# http://www.codeandweb.com/texturepacker/unity
+#
+# Sprite sheet: RobotAtlas.png (404 x 344)
+# $TexturePacker:SmartUpdate:1301696ef1421607d5d190df4b6f25d3:667f9f985a7649173aebc0c4ee3ad4d4:d734f8e8acfc7475402fb27d33af38f0$
+#
+:normalmap=RobotAtlas_n.png
+
+walking_robot1;2;4;80;164;0.525;0.524390243902439
+walking_robot2;214;174;96;168;0.5208333333333334;0.5119047619047619
+walking_robot3;2;170;104;172;0.5192307692307693;0.5
+walking_robot4;214;4;96;168;0.5208333333333334;0.5119047619047619
+walking_robot5;84;4;80;164;0.525;0.524390243902439
+walking_robot6;312;174;88;168;0.5227272727272727;0.5119047619047619
+walking_robot7;108;170;104;172;0.5192307692307693;0.5
+walking_robot8;312;4;88;168;0.5227272727272727;0.5119047619047619

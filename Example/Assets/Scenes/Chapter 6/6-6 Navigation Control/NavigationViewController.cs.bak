@@ -1,0 +1,133 @@
+﻿using UnityEngine;
+using UnityEngine.UI;
+using System.Collections.Generic;
+
+[RequireComponent(typeof(CanvasGroup))]
+public class NavigationViewController : ViewController	// ViewController 클래스를 상속
+{
+	private Stack<ViewController> stackedViews = 
+		new Stack<ViewController>();				// 뷰의 계층을 저장하는 스택
+	private ViewController currentView = null;		// 현재 뷰를 저장
+	
+	[SerializeField] private Text titleLabel;		// 내비게이션 바의 타이틀을 표시하는 텍스트
+	[SerializeField] private Button backButton;		// 내비게이션 바의 백 버튼
+	[SerializeField] private Text backButtonLabel;	// 백 버튼의 텍스트
+	
+	// 인스턴스를 로드할 때 호출된다
+	void Awake()
+	{
+		// 백 버튼의 이벤트 리스너를 설정한다
+		backButton.onClick.AddListener(OnPressBackButton);
+		// 처음에는 백 버튼을 표시하지 않는다
+		backButton.gameObject.SetActive(false);
+	}
+	
+	// 백 버튼이 눌러졌을 때 호출되는 메서드
+	public void OnPressBackButton()
+	{
+		// 이전 계층의 뷰로 되돌아간다
+		Pop();
+	}
+	
+	// 사용자의 인터랙션을 유효화/무효화하는 메서드
+	private void EnableInteraction(bool isEnabled)
+	{
+		GetComponent<CanvasGroup>().blocksRaycasts = isEnabled;
+	}
+	
+	// 다음 계층의 뷰로 옮겨가는 처리를 수행하는 메서드
+	public void Push(ViewController newView)
+	{
+		if(currentView == null)
+		{
+			// 첫 뷰는 애니메이션 없이 표시한다
+			newView.gameObject.SetActive(true);
+			currentView = newView;
+			return;
+		}
+		
+		// 애니메이션 도중에는 사용자의 인터랙션을 무효화한다
+		EnableInteraction(false);
+		
+		// 현재 표시된 뷰를 화면 왼쪽 밖으로 이동시킨다
+		ViewController lastView = currentView;
+		stackedViews.Push(lastView);
+		Vector2 lastViewPos = lastView.CachedRectTransform.anchoredPosition;
+		lastViewPos.x = -this.CachedRectTransform.rect.width;
+		lastView.CachedRectTransform.MoveTo(
+			lastViewPos, 0.3f, 0.0f, iTween.EaseType.easeOutSine, ()=>{
+				// 이동이 끝나면 뷰를 비활성화한다
+				lastView.gameObject.SetActive(false);
+		});
+
+		// 새로운 뷰를 화면 왼쪽 밖으로부터 중앙으로 이동시킨다
+		newView.gameObject.SetActive(true);
+		Vector2 newViewPos = newView.CachedRectTransform.anchoredPosition;
+		newView.CachedRectTransform.anchoredPosition = 
+			new Vector2(this.CachedRectTransform.rect.width, newViewPos.y);
+		newViewPos.x = 0.0f;
+		newView.CachedRectTransform.MoveTo(
+			newViewPos, 0.3f, 0.0f, iTween.EaseType.easeOutSine, ()=>{
+				// 이동이 끝나면 사용자의 인터랙션을 유효화한다
+				EnableInteraction(true);
+		});
+		
+		// 새로운 뷰를 현재의 뷰로서 저장하고 내비게이션 바의 타이틀을 변경한다
+		currentView = newView;
+		titleLabel.text = newView.Title;
+
+		// バックボタンのラベルを変更する
+		backButtonLabel.text = lastView.Title;
+		// バックボタンをアクティブにする
+		backButton.gameObject.SetActive(true);
+	}
+	
+	// 前の階層のビューへ戻る処理をおこなうメソッド
+	public void Pop()
+	{
+		if(stackedViews.Count < 1)
+		{
+			// 前の階層のビューがないので何もしない
+			return;
+		}
+		
+		// アニメーションの最中はユーザーのインタラクションを無効にする
+		EnableInteraction(false);
+		
+		// 現在表示されているビューを画面右外に移動する
+		ViewController lastView = currentView;
+		Vector2 lastViewPos = lastView.CachedRectTransform.anchoredPosition;
+		lastViewPos.x = this.CachedRectTransform.rect.width;
+		lastView.CachedRectTransform.MoveTo(
+			lastViewPos, 0.3f, 0.0f, iTween.EaseType.easeOutSine, ()=>{
+				// 移動が終わったらビューを非アクティブにする
+				lastView.gameObject.SetActive(false);
+		});
+		
+		// 前の階層のビューをスタックから戻し、画面左外から中央に移動する
+		ViewController poppedView = stackedViews.Pop();
+		poppedView.gameObject.SetActive(true);
+		Vector2 poppedViewPos = poppedView.CachedRectTransform.anchoredPosition;
+		poppedViewPos.x = 0.0f;
+		poppedView.CachedRectTransform.MoveTo(
+			poppedViewPos, 0.3f, 0.0f, iTween.EaseType.easeOutSine, ()=>{
+				// 移動が終わったらユーザーのインタラクションを有効にする
+				EnableInteraction(true);
+		});
+
+		// スタックから戻したビューを現在のビューとして保持して、ナビゲーションバーのタイトルを変更する
+		currentView = poppedView;
+		titleLabel.text = poppedView.Title;
+
+		// 前の階層のビューがある場合、バックボタンのラベルを変更してアクティブにする
+		if(stackedViews.Count >= 1)
+		{
+			backButtonLabel.text = stackedViews.Peek().Title;
+			backButton.gameObject.SetActive(true);
+		}
+		else
+		{
+			backButton.gameObject.SetActive(false);
+		}
+	}
+}
